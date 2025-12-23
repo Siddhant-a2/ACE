@@ -68,6 +68,40 @@ Frontend scripts: see [frontend/package.json](frontend/package.json#L1)
 
 ---
 
+## Additional Requirement
+
+Only admins can currently create accounts. To enable public signup temporarily:
+
+1. Start the backend:
+```bash
+cd backend
+npm run dev
+```
+
+2. Edit the signup route in backend/routes/auth.route.js — remove the adminPrivilage middleware. Example change:
+
+Before:
+
+`router.post('/signup', adminPrivilage, signupController);`
+
+After:
+
+`router.post('/signup', signupController);`
+
+3. Restart the backend (if it didn’t restart automatically) and send a POST request (Postman or curl) to the signup endpoint:
+
+URL:
+`http://localhost:<PORT>/api/auth/v1/signup`
+
+
+Body (JSON, raw): 
+`{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "securePassword123"
+}`
+
+
 ## Project structure (high level)
 - `backend/` — Express API, MongoDB models, controllers, Cloudinary integration
   - `src/index.js` — server bootstrap and route mounting
