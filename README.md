@@ -1,12 +1,12 @@
-# ACE — Event & Profile Manager
+# ACE 
 
 [![version](https://img.shields.io/badge/version-1.0.0-blue)](backend/package.json) [![license](https://img.shields.io/badge/license-ISC-lightgrey)](LICENSE)
 
-A full‑stack web application prototype combining a Vite + React frontend with an Express + MongoDB backend. ACE provides user authentication, profile management, event creation and viewing, and image uploads (Cloudinary). It's designed as a small, extensible starter for event-driven apps and creator profiles.
+A full‑stack web application prototype combining a Vite + React frontend with an Express + MongoDB backend. 
 
 **Key features**
 - User authentication (signup, login, cookies & JWT)
-- Event CRUD (create, read, list, delete)
+- Event CRUD (create, read, update, delete)
 - Image uploads and Cloudinary signature generation
 - React context stores for auth, events and uploads
 - Vite + Tailwind/DaisyUI frontend layouts and preview components
