@@ -1,0 +1,11 @@
+/* Import Tailwind CSS core styles
+   - Includes base styles (preflight)
+   - Includes utility classes (flex, grid, spacing, colors, etc.)
+   - Required for Tailwind to work in the project */
+@import "tailwindcss";
+
+/* Enable DaisyUI plugin for Tailwind CSS
+   - Provides pre-built UI components (buttons, cards, modals, navbar, etc.)
+   - Adds themes and design tokens on top of Tailwind utilities
+   - Works seamlessly with Tailwind utility classes */
+@plugin "daisyui";
