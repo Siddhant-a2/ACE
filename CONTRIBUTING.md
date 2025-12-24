@@ -31,6 +31,19 @@ Thank you for your interest in contributing to ACE! We welcome contributions of 
    - How to test the change locally.
 5. Be responsive to review feedback; maintainers may request changes.
 
+```bash
+
+git checkout main
+git pull origin main
+git checkout -b feature/my-change
+# make changes
+git add .
+git commit -m "feat: my change"
+git push origin feature/my-change
+
+
+```
+
 ## Branching & commit conventions
 - Branches: use descriptive names like `fix/`, `feat/`, `chore/`.
 - Commit messages: use clear, present-tense messages. Consider Conventional Commits style, e.g. `feat(auth): add JWT refresh endpoint`.
