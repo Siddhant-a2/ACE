@@ -33,23 +33,22 @@ import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 function App() {
-
   /* ----------------------------------
      Global Auth State
      ---------------------------------- */
   const {
-    user,                // Logged-in user object
-    isAdmin,             // Boolean flag for admin users
-    userAuthentication,  // Function to verify user session
-    isCheckingAuth       // Loading state while checking auth
+    user, // Logged-in user object
+    isAdmin, // Boolean flag for admin users
+    userAuthentication, // Function to verify user session
+    isCheckingAuth, // Loading state while checking auth
   } = useAuth();
 
   /* ----------------------------------
      Global Event State
      ---------------------------------- */
   const {
-    currEventLoading,    // Loading state for current events
-    fetchCurrEvents      // Function to fetch active events
+    currEventLoading, // Loading state for current events
+    fetchCurrEvents, // Function to fetch active events
   } = useEvent();
 
   /* ----------------------------------
@@ -81,7 +80,6 @@ function App() {
 
       {/* Application Routes */}
       <Routes>
-
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route
@@ -98,6 +96,11 @@ function App() {
           path="/add-event"
           element={isAdmin ? <AddEvent /> : <Navigate to="/" />}
         />
+        <Route
+          path="/edit-event/:id"
+          element={isAdmin ? <AddEvent /> : <Navigate to="/" />}
+        />
+
         <Route
           path="/view-event"
           element={isAdmin ? <ViewEvent /> : <Navigate to="/" />}
@@ -127,7 +130,6 @@ function App() {
 
         {/* Fallback Route (404 Page) */}
         <Route path="*" element={<Error />} />
-
       </Routes>
 
       {/* Global Toast Notifications */}

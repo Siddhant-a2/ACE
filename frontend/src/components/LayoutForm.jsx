@@ -15,8 +15,7 @@ import Layout6 from "./layouts/Layout6.jsx";
  * - selectedLayout : string (currently selected layout key)
  * - layouts        : shared layout configuration/data passed to each layout
  */
-function LayoutForm({ selectedLayout, layouts }) {
-
+function LayoutForm({ selectedLayout, layouts, isEdit = false, eventId }) {
   /**
    * Fallback UI when no layout is selected
    */
@@ -38,47 +37,34 @@ function LayoutForm({ selectedLayout, layouts }) {
         <Layout1
           selectedLayout={selectedLayout}
           layouts={layouts}
+          isEdit={isEdit}
+          eventId={eventId}
         />
       )}
 
       {/* Layout 2 */}
       {selectedLayout === "layout2" && (
-        <Layout2
-          selectedLayout={selectedLayout}
-          layouts={layouts}
-        />
+        <Layout2 selectedLayout={selectedLayout} layouts={layouts} />
       )}
 
       {/* Layout 3 */}
       {selectedLayout === "layout3" && (
-        <Layout3
-          selectedLayout={selectedLayout}
-          layouts={layouts}
-        />
+        <Layout3 selectedLayout={selectedLayout} layouts={layouts} />
       )}
 
       {/* Layout 4 */}
       {selectedLayout === "layout4" && (
-        <Layout4
-          selectedLayout={selectedLayout}
-          layouts={layouts}
-        />
+        <Layout4 selectedLayout={selectedLayout} layouts={layouts} />
       )}
 
       {/* Layout 5 */}
       {selectedLayout === "layout5" && (
-        <Layout5
-          selectedLayout={selectedLayout}
-          layouts={layouts}
-        />
+        <Layout5 selectedLayout={selectedLayout} layouts={layouts} />
       )}
 
       {/* Layout 6 */}
       {selectedLayout === "layout6" && (
-        <Layout6
-          selectedLayout={selectedLayout}
-          layouts={layouts}
-        />
+        <Layout6 selectedLayout={selectedLayout} layouts={layouts} />
       )}
     </>
   );

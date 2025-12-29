@@ -34,6 +34,43 @@ export const addEvent = async (req, res) => {
     }
 };
 
+// ===================== EDIT / UPDATE EVENT =====================
+export const editEvent = async (req, res) => {
+    try {
+        const { id } = req.params;          // Event ID from URL
+        const updatedData = req.body;       // Updated fields from frontend
+
+        // Find event by ID and update it
+        const updatedEvent = await Event.findByIdAndUpdate(
+            id,
+            { ...updatedData },
+            {
+                new: true,          // return updated document
+                runValidators: true // ensure schema validation
+            }
+        );
+
+        // If event not found
+        if (!updatedEvent) {
+            return res.status(404).json({
+                message: "Event not found"
+            });
+        }
+
+        // Success response
+        res.status(200).json({
+            message: "Event updated successfully",
+            event: updatedEvent
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error
+        });
+    }
+};
+
 
 // ===================== GET CURRENT / UPCOMING EVENTS =====================
 export const getCurrentEvent = async (req, res) => {

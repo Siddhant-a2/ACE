@@ -1,6 +1,8 @@
 // React hook for managing component state
 import { useState } from "react";
-
+import { useEffect } from "react";
+import { axiosInstance } from "../lib/axios";
+import { useParams } from "react-router-dom";
 // Component responsible for rendering the form
 // based on the selected event layout
 import LayoutForm from "../components/LayoutForm.jsx";
@@ -18,22 +20,39 @@ const layouts = [
 ];
 
 function AddEvent() {
-
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+  
   /* ----------------------------------
-     Local State
-     ---------------------------------- */
+  Local State
+  ---------------------------------- */
   const [selectedLayout, setSelectedLayout] = useState(null); // Currently selected layout
+  
+ useEffect(() => {
+  if (!isEdit) return;
 
+  const loadEvent = async () => {
+    const res = await axiosInstance.get("/api/event/v1/get-all-event");
+
+    const event = res.data.events.find(e => e._id === id);
+    if (!event) return;
+
+   
+    setSelectedLayout(event.layoutSelected);
+
+    console.log("Edit mode:", true, "Layout:", event.layoutSelected);
+  };
+
+  loadEvent();
+}, [isEdit, id]);
+  console.log("Edit mode:", isEdit, "Layout:", selectedLayout);
   return (
     <div className="flex min-h-screen bg-base-200">
-
       {/* ----------------------------------
          Sidebar: Layout Selector
          ---------------------------------- */}
       <aside className="w-64 bg-base-100 shadow-lg p-4">
-        <h1 className="text-xl font-bold mb-4">
-          Select Layout
-        </h1>
+        <h1 className="text-xl font-bold mb-4">Select Layout</h1>
 
         {/* Layout Options */}
         <ul className="menu space-y-1">
@@ -59,16 +78,17 @@ function AddEvent() {
          Main Content Area
          ---------------------------------- */}
       <main className="flex-1 p-8 bg-base-100">
-
         {/* Layout Form */}
         {/* Renders the appropriate form based on selected layout */}
         <div className="w-full">
           <LayoutForm
             selectedLayout={selectedLayout}
             layouts={layouts}
+            eventId={id}
+            isEdit={isEdit}
+            setSelectedLayout={setSelectedLayout}
           />
         </div>
-
       </main>
     </div>
   );
