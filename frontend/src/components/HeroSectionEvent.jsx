@@ -39,13 +39,7 @@ function HeroSectionEvent() {
    */
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  /**
-   * If there are no events, show default hero section
-   */
-  if (!currEvent || currEvent.length === 0) {
-    return <HeroSection />;
-  }
-
+  
   /**
    * Map layout keys to corresponding layout components
    * Enables dynamic rendering based on event configuration
@@ -111,6 +105,14 @@ function HeroSectionEvent() {
       </div>
     );
   }
+
+  /**
+   * If there are no events, show default hero section
+   */
+  if (!currEvent || currEvent.length === 0) {
+    return <HeroSection />;
+  }
+
 
   /**
    * Slider UI
