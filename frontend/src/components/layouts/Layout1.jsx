@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/immutability */
 // React hook for managing local component state
 import { useState } from "react";
+import { useEffect } from "react";
 
+import { axiosInstance } from "../../lib/axios";
 // Component responsible for rendering live preview of the selected layout
 import PreviewLayout from "./PreviewLayout";
 
@@ -13,17 +16,18 @@ import { useSign } from "../../store/useSignature.jsx";
 // Custom hook to manage event-related actions (like adding a new event)
 import { useEvent } from "../../store/useEventStore.jsx";
 
-function Layout1({ selectedLayout, layouts }) {
-
+function Layout1({ selectedLayout, layouts, isEdit = false, eventId }) {
   /* ================= IMAGE FILE STATES ================= */
   // These states store actual image FILE objects (used for upload)
   const [bgImage, setBGImage] = useState(null);
   const [fgImage1, setFGImage1] = useState(null);
   const [fgImage2, setFGImage2] = useState(null);
+  const { addEvent, editEvent } = useEvent();
+  console.log("isEdit:", isEdit, "eventId:", eventId);
+  console.log("editEvent from store:", editEvent);
 
   /* ================= EVENT STORE ================= */
   // addEvent sends event data to backend/store
-  const { addEvent } = useEvent();
 
   /* ================= LOADING STATE ================= */
   // Controls loading spinner and disables buttons during submission
@@ -57,6 +61,26 @@ function Layout1({ selectedLayout, layouts }) {
     FGImage2: null,
     FGImage2Check: false,
   });
+
+  useEffect(() => {
+    if (!isEdit || !eventId) return;
+
+    const fetchEvent = async () => {
+      const res = await axiosInstance.get("/api/event/v1/get-all-event");
+
+      //const event = res.data.find((e) => e._id === eventId);
+      const event = res.data.events.find((e) => e._id === eventId);
+
+      if (!event) return;
+
+      setFormData({
+        ...event,
+        date: event.date?.split("T")[0], // important for <input type="date">
+      });
+    };
+
+    fetchEvent();
+  }, [isEdit, eventId]);
 
   /* ================= DATE VALIDATION ================= */
   // Ensures users can only select future dates
@@ -158,7 +182,13 @@ function Layout1({ selectedLayout, layouts }) {
     console.log(updatedFormData);
 
     // Save event
-    addEvent(updatedFormData);
+    //addEvent(updatedFormData);
+    // if it is in edit mode edit it
+    if (isEdit) {
+      await editEvent(eventId, updatedFormData);
+    } else {
+      await addEvent(updatedFormData);
+    }
 
     // Clear image states
     setBGImage(null);
@@ -166,7 +196,11 @@ function Layout1({ selectedLayout, layouts }) {
     setFGImage2(null);
 
     // Reset form
-    handleReset();
+    //handleReset();
+    if (!isEdit) {
+      handleReset();
+    }
+
     setCreatingEvent(false);
   };
 
@@ -197,7 +231,6 @@ function Layout1({ selectedLayout, layouts }) {
   return (
     /* ================= MAIN BUILDER LAYOUT ================= */
     <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-12">
-
       {/* ================= LEFT : FORM ================= */}
       <form
         onSubmit={handleSubmit}
@@ -215,12 +248,9 @@ function Layout1({ selectedLayout, layouts }) {
 
         {/* ================= BASIC INFORMATION ================= */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">
-            Basic Information
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             {/* Event Title */}
             <div className="form-control">
               <label className="label">
@@ -300,7 +330,9 @@ function Layout1({ selectedLayout, layouts }) {
             {/* Paragraph */}
             <div className="form-control md:col-span-2">
               <label className="label">
-                <span className="label-text font-medium">Paragraph Description</span>
+                <span className="label-text font-medium">
+                  Paragraph Description
+                </span>
                 <input
                   type="checkbox"
                   name="ParagraphCheck"
@@ -392,7 +424,9 @@ function Layout1({ selectedLayout, layouts }) {
             {/* CTA */}
             <div className="form-control md:col-span-2">
               <label className="label flex justify-between items-center">
-                <span className="label-text font-medium">Enable CTA Button</span>
+                <span className="label-text font-medium">
+                  Enable CTA Button
+                </span>
                 <input
                   type="checkbox"
                   name="ctaTextCheck"
@@ -448,6 +482,8 @@ function Layout1({ selectedLayout, layouts }) {
                 <Loader2 className="h-5 w-5 animate-spin" />
                 Loading...
               </>
+            ) : isEdit ? (
+              "Update Event"
             ) : (
               "Create Event"
             )}
@@ -461,6 +497,8 @@ function Layout1({ selectedLayout, layouts }) {
           <PreviewLayout layout={selectedLayout} data={formData} />
         </div>
       </div>
+      
+
     </div>
   );
 }

@@ -9,7 +9,8 @@ import {
     addEvent,
     deleteEvent,
     getCurrentEvent,
-    getAllEvent
+    getAllEvent,
+    editEvent
 } from "../controllers/event.controller.js"; 
 
 
@@ -21,6 +22,10 @@ const router = express.Router();
 
 // Add a new event (admin-only access)
 router.post("/add-event", adminPrivilage, addEvent);
+
+// Edit an existing event (admin-only)
+router.put("/edit-event/:id", adminPrivilage, editEvent);
+
 
 // Get the currently active/upcoming event (public access)
 router.get("/get-curr-event", getCurrentEvent);

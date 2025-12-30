@@ -16,19 +16,18 @@ export const EventContext = createContext();
    Event Provider Component
    ---------------------------------- */
 export const EventProvider = ({ children }) => {
-
   /* ----------------------------------
      Event State
      ---------------------------------- */
-  const [events, setAllEvents] = useState([]);     // All events (paginated)
-  const [currEvent, setCurrEvent] = useState([]);  // Currently active events
+  const [events, setAllEvents] = useState([]); // All events (paginated)
+  const [currEvent, setCurrEvent] = useState([]); // Currently active events
 
   /* ----------------------------------
      Loading & Pagination State
      ---------------------------------- */
-  const [loading, setLoading] = useState(true);            // Loading for all events
+  const [loading, setLoading] = useState(true); // Loading for all events
   const [currEventLoading, setCurrEventLoading] = useState(true); // Loading for current events
-  const [pagination, setPagination] = useState({});       // Pagination metadata
+  const [pagination, setPagination] = useState({}); // Pagination metadata
 
   /* ----------------------------------
      Fetch All Events (Paginated)
@@ -57,9 +56,7 @@ export const EventProvider = ({ children }) => {
   const fetchCurrEvents = async () => {
     try {
       // Fetch currently active events
-      const res = await axiosInstance.get(
-        `/api/event/v1/get-curr-event`
-      );
+      const res = await axiosInstance.get(`/api/event/v1/get-curr-event`);
 
       setCurrEvent(res.data.currEvents);
     } catch (error) {
@@ -76,10 +73,7 @@ export const EventProvider = ({ children }) => {
   const addEvent = async (formData) => {
     try {
       // Create a new event
-      const res = await axiosInstance.post(
-        "/api/event/v1/add-event",
-        formData
-      );
+      const res = await axiosInstance.post("/api/event/v1/add-event", formData);
 
       if (res.data) {
         toast.success("Event Added Successfully");
@@ -89,9 +83,27 @@ export const EventProvider = ({ children }) => {
       await fetchAllEvents();
       await fetchCurrEvents();
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || error.message
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
+
+  //edit event
+  const editEvent = async (id, data) => {
+    try {
+      const res = await axiosInstance.put(
+        `/api/event/v1/edit-event/${id}`,
+        data
       );
+
+      if (res.data) {
+        toast.success("Event Updated Successfully");
+      }
+
+      // Refresh data after update
+      await fetchAllEvents();
+      await fetchCurrEvents();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -101,9 +113,7 @@ export const EventProvider = ({ children }) => {
   const deleteEvent = async (id) => {
     try {
       // Delete event by ID
-      await axiosInstance.delete(
-        `/api/event/v1/delete-event/${id}`
-      );
+      await axiosInstance.delete(`/api/event/v1/delete-event/${id}`);
 
       toast.success("Event Deleted Successfully");
 
@@ -111,9 +121,7 @@ export const EventProvider = ({ children }) => {
       await fetchAllEvents();
       await fetchCurrEvents();
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || error.message
-      );
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -123,15 +131,16 @@ export const EventProvider = ({ children }) => {
   return (
     <EventContext.Provider
       value={{
-        events,              // All events (paginated)
-        currEvent,           // Current events
-        loading,             // Loading state for all events
-        currEventLoading,    // Loading state for current events
-        pagination,          // Pagination metadata
-        fetchAllEvents,      // Fetch all events
-        fetchCurrEvents,     // Fetch current events
-        addEvent,            // Add new event
-        deleteEvent          // Delete event
+        events, // All events (paginated)
+        currEvent, // Current events
+        loading, // Loading state for all events
+        currEventLoading, // Loading state for current events
+        pagination, // Pagination metadata
+        fetchAllEvents, // Fetch all events
+        fetchCurrEvents, // Fetch current events
+        addEvent, // Add new event
+        deleteEvent, // Delete event
+        editEvent //edit and event
       }}
     >
       {children}

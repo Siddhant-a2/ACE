@@ -1,26 +1,29 @@
 // React hooks for state and lifecycle management
 import { useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 // Event store (handles fetching, deleting events, and pagination state)
 import { useEvent } from "../store/useEventStore.jsx";
 
 function ViewEvents() {
+  const navigate = useNavigate();
 
   /* ----------------------------------
      Global Event State
      ---------------------------------- */
   const {
-    events,           // List of events for current page
-    pagination,       // Pagination metadata (page, totalPages, etc.)
-    loading,          // Loading state while fetching events
-    fetchAllEvents,   // Function to fetch events with pagination
-    deleteEvent       // Function to delete an event
+    events, // List of events for current page
+    pagination, // Pagination metadata (page, totalPages, etc.)
+    loading, // Loading state while fetching events
+    fetchAllEvents, // Function to fetch events with pagination
+    deleteEvent, // Function to delete an event
   } = useEvent();
 
   /* ----------------------------------
      Local Component State
      ---------------------------------- */
-  const [page, setPage] = useState(1);        // Current page number
+  const [page, setPage] = useState(1); // Current page number
   const [deletingId, setDeletingId] = useState(null); // Track event being deleted
 
   /* ----------------------------------
@@ -34,7 +37,6 @@ function ViewEvents() {
      Delete Event Handler
      ---------------------------------- */
   const handleDelete = async (id) => {
-
     // Ask for confirmation before deleting
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this event?"
@@ -64,7 +66,6 @@ function ViewEvents() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-
       {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6">All Events</h1>
 
@@ -72,9 +73,7 @@ function ViewEvents() {
          Empty State
          ---------------------------------- */}
       {events.length === 0 ? (
-        <div className="text-center py-20 text-gray-500 text-lg">
-          No events
-        </div>
+        <div className="text-center py-20 text-gray-500 text-lg">No events</div>
       ) : (
         <>
           {/* ----------------------------------
@@ -88,22 +87,30 @@ function ViewEvents() {
               >
                 {/* Event Details */}
                 <div>
-                  <h2 className="text-lg font-semibold">
-                    {event.title}
-                  </h2>
+                  <h2 className="text-lg font-semibold">{event.title}</h2>
                   <p className="text-sm text-gray-500">
                     {new Date(event.date).toDateString()}
                   </p>
                 </div>
 
-                {/* Delete Button */}
-                <button
-                  className="btn btn-error btn-sm"
-                  onClick={() => handleDelete(event._id)}
-                  disabled={deletingId === event._id}
-                >
-                  {deletingId === event._id ? "Deleting..." : "Delete"}
-                </button>
+                <div className="flex gap-2">
+                  {/* Edit Button */}
+                  <button
+                    className="btn btn-outline btn-primary btn-sm"
+                    onClick={() => navigate(`/edit-event/${event._id}`)}
+                  >
+                    Edit
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    className="btn btn-error btn-sm"
+                    onClick={() => handleDelete(event._id)}
+                    disabled={deletingId === event._id}
+                  >
+                    {deletingId === event._id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -114,7 +121,6 @@ function ViewEvents() {
           {pagination.totalPages > 1 && (
             <div className="flex justify-center mt-8">
               <div className="join">
-
                 {/* Previous Page Button */}
                 <button
                   className="join-item btn"
@@ -145,7 +151,6 @@ function ViewEvents() {
                 >
                   »
                 </button>
-
               </div>
             </div>
           )}

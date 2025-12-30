@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 // React hook for managing local component state
 import { useState } from "react";
 
